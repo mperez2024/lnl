@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert("Nice try! No source code for you.");
+    window.location.href = "pic/et.gif"; 
+  });
+  document.onkeydown = function(e) {
+    if (
+      e.keyCode == 123 || 
+      (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) || 
+      (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) || 
+      (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) || 
+      (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))   
+    ) {
+      alert("Keyboard shortcuts are disabled here!");
+      return false;
+    }
+  };
+  setInterval(function() {
+    debugger;
+  }, 100);
+</script>
+<!-- Favicons -->
+<link rel="shortcut icon" href="pic/favicon.ico">	
+<link rel="apple-touch-icon" href="pic/apple-touch-icon.png">
+<!-- Favicons -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MP - Locked and loaded</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --font-display: 'Source Serif 4', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --color-primary: #1B6AC9;
+    --color-primary-light: #E8F0FE;
+    --color-secondary: #D97706;
+    --color-accent: #059669;
+    --color-danger: #C53030;
+    --color-text: #F0F0F0;
+    --color-text-secondary: #BBBBBB;
+    --color-text-tertiary: #888888;
+    --teal: #20808D;
+    --terra: #a84b2f;
+    --dark-teal: #1B474D;
+    --light-cyan: #BCE2E7;
+    --mauve: #944454;
+    --gold: #FFC553;
+    --olive: #848456;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: #0a0a0a;
+    color: var(--color-text);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ SECTION BASE ============ */
+  .scene {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .scene-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+  .scene-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .scene-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1100px;
+    padding: 6vh 5%;
+  }
+
+  /* ============ TYPOGRAPHY ============ */
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .hero-subtitle {
+    font-size: clamp(1rem, 2vw, 1.35rem);
+    color: rgba(255,255,255,0.8);
+    line-height: 1.5;
+    max-width: 650px;
+    font-weight: 400;
+  }
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 0.75rem;
+    display: inline-block;
+    background: rgba(32,128,141,0.15);
+    padding: 4px 12px;
+    border-radius: 4px;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: #fff;
+    margin-bottom: 0.75rem;
+  }
+  .annotation {
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    color: rgba(255,255,255,0.85);
+    line-height: 1.55;
+    max-width: 560px;
+  }
+  .source-line {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.45);
+    margin-top: 1.5rem;
+    line-height: 1.5;
+  }
+  .source-line a { color: rgba(255,255,255,0.55); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2); }
+
+  /* ============ KPI CARDS ============ */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .kpi-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    text-align: left;
+  }
+  .kpi-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums lining-nums;
+    color: #fff;
+    line-height: 1.1;
+  }
+  .kpi-value.teal { color: var(--teal); }
+  .kpi-value.gold { color: var(--gold); }
+  .kpi-value.terra { color: var(--terra); }
+  .kpi-value.danger { color: var(--mauve); }
+  .kpi-label {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: 0.35rem;
+    line-height: 1.35;
+  }
+
+  /* ============ CHART CONTAINERS ============ */
+  .chart-panel {
+    background: rgba(0,0,0,0.30);   
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 2rem 2.25rem;
+    margin: 1.5rem 0;
+  }
+  .chart-title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.25rem;
+  }
+  .chart-subtitle {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 1.25rem;
+  }
+
+  /* ============ BAR CHART ============ */
+  .bar-chart { width: 100%; }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 60px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .bar-label {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.85);
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .bar-track {
+    height: 28px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    width: 0;
+  }
+  .bar-fill.animated { width: var(--target-width); }
+  .bar-val {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.8);
+    font-variant-numeric: tabular-nums;
+    text-align: left;
+  }
+
+  /* ============ TIMELINE ============ */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+    margin: 2rem 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255,255,255,0.12);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 1.75rem;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -25px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--teal);
+    border: 2px solid #0a0a0a;
+  }
+  .timeline-date {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.25rem;
+  }
+  .timeline-text {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.5;
+  }
+  .timeline-item.highlight::before { background: var(--terra); }
+  .timeline-item.highlight .timeline-date { color: var(--terra); }
+
+  /* ============ COMPARISON TABLE ============ */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin-top: 1rem;
+  }
+  .compare-table th {
+    text-align: left;
+    color: rgba(255,255,255,0.5);
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .compare-table td {
+    padding: 10px 12px;
+    color: rgba(255,255,255,0.85);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    vertical-align: top;
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .badge-win { background: rgba(32,128,141,0.25); color: var(--light-cyan); }
+  .badge-loss { background: rgba(168,75,47,0.25); color: #E8A88A; }
+  .badge-tie { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); }
+
+  /* ============ PIPELINE DIAGRAM ============ */
+  .pipeline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    align-items: stretch;
+    margin: 2rem 0;
+  }
+  .pipeline-step {
+    flex: 1;
+    min-width: 160px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 1.25rem 1rem;
+    position: relative;
+    text-align: center;
+  }
+  .pipeline-step:first-child { border-radius: 12px 0 0 12px; }
+  .pipeline-step:last-child { border-radius: 0 12px 12px 0; }
+  .pipeline-step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.25);
+    z-index: 3;
+  }
+  .pipeline-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .pipeline-name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 0.25rem;
+  }
+  .pipeline-model {
+    font-size: 0.68rem;
+    color: var(--teal);
+    font-weight: 500;
+  }
+  .pipeline-desc {
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 0.35rem;
+    line-height: 1.35;
+  }
+
+  /* ============ GAUGE / DONUT ============ */
+  .gauge-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+  .gauge-item {
+    text-align: center;
+  }
+  .gauge-item svg {
+    width: 120px;
+    height: 120px;
+  }
+  .gauge-center-text {
+    font-size: 1.4rem;
+    font-weight: 700;
+    fill: #fff;
+    font-family: var(--font-body);
+    font-variant-numeric: tabular-nums;
+  }
+  .gauge-label-text {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
+    margin-top: 0.5rem;
+    line-height: 1.35;
+  }
+
+  /* ============ CALLOUT ============ */
+  .callout {
+    background: rgba(32,128,141,0.12);
+    border-left: 3px solid var(--teal);
+    padding: 1rem 1.25rem;
+    border-radius: 0 8px 8px 0;
+    margin: 1.5rem 0;
+  }
+  .callout p {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.55;
+  }
+  .callout.warning {
+    background: rgba(168,75,47,0.12);
+    border-left-color: var(--terra);
+  }
+
+  /* ============ ANIMATIONS ============ */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 700px) {
+    .hero-title { font-size: 2rem; }
+    .bar-row { grid-template-columns: 100px 1fr 50px; }
+    .bar-label { font-size: 0.72rem; }
+    .pipeline { flex-direction: column; }
+    .pipeline-step { border-radius: 8px !important; }
+    .pipeline-step:not(:last-child)::after { display: none; }
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+    .chart-panel { padding: 1.25rem; }
+    .scene-content { padding: 4vh 5%; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0a0a0a; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SCREEN 1 — HERO: Supercell over the plains
+     ============================================================ -->
+<section class="scene" id="hero" style="min-height: 100vh;">
+  <img class="scene-bg" src="https://i.gifer.com/DbTm.gif" alt="Supercell thunderstorm in Kansas">
+  <div class="scene-overlay" style="background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 50%, rgba(10,10,10,1) 100%);"></div>
+  <div class="scene-content" style="display: flex; flex-direction: column; justify-content: flex-end; min-height: 100vh; padding-bottom: 8vh;">
+    <div class="fade-up">
+      <div class="section-label" style="background: rgba(241, 238, 238, 0.2); color: var(--white);"><script>
+          const now = new Date();
+          const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+          const dayName = daysOfWeek[now.getDay()];
+          const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+          ];
+          const monthName = months[now.getMonth()];
+          const day = now.getDate();
+          const year = now.getFullYear();
+
+          document.write(dayName + ", " + monthName + " " + day + ", " + year + ".");
+        </script></div>
+      <h1 class="hero-title"> “Locked and loaded”</h1><br>
+      <p class="hero-subtitle">Second Amendment (1791).<i style="color:rgb(130, 134, 141)"> "A well regulated Militia, being necessary to the security of a free State, the right of the people to keep and bear Arms, shall not be infringed."</i></p>
+      <p class="source-line" style="margin-top: 2rem;">Powered by: Miguel E. Pérez Velázquez · Source: <a href="https://commons.wikimedia.org/w/index.php?search=45+mm+bullets&title=Special%3AMediaSearch&type=image"target="_blank">wikimedia.com</a> (Jun 2022) Public Domain.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 2 — Calibers
+     ============================================================ -->
+<section class="scene" id="stakes">
+  <img class="scene-bg" src="pic/3.png" alt="Tornado destruction damage">
+  <div class="scene-overlay" style="background: linear-gradient(135deg, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.6) 50%, rgba(10,10,10,0.85) 100%);"></div>
+  <div class="scene-content">
+    <div class="fade-up">
+      <div class="section-label">Calibers</div>
+      <h2 class="section-title">My top 3 calibers for home defense and<br>one for concealed carry</h2>
+      <p class="annotation">Sport shooting since 1990, practicing with various calibers in controlled environments and strictly following safety regulations.</p>
+    </div>
+
+    <div class="kpi-row fade-up">
+      <div class="kpi-card">
+        <div class="kpi-value danger">.45 ACP</div>
+        <div class="kpi-label">The SAAMI pressure limit for the .45 ACP is set at 21,000 psi (144.79 MPa) piezo pressure,[14] while the SAAMI pressure limit for the .45 ACP +P is set at 23,000 psi (158.58 MPa), piezo pressure.</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value terra">5.56 NATO</div>
+        <div class="kpi-label">The SAAMI sets the pressure limit for .223 Rem at 55,000 psi (379.21 MPa), using a chamber-conformal piston transducer.</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value gold">.44 Mag</div>
+        <div class="kpi-label">The .44 Remington Magnum (commonly called .44 Magnum) has a SAAMI Maximum Average Pressure (MAP) of 36,000 psi (250 MPa). </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value teal">.50 BMG</div>
+        <div class="kpi-label">The .50 BMG (12.7×99mm NATO) cartridge has a capacity of 290 gr (19 g).</div>
+      </div>
+    </div>
+
+    <div class="callout warning fade-up">
+      <p>The Sporting Arms and Ammunition Manufacturers’ Institute (SAAMI) is an association of the nation’s leading manufacturers of firearms, ammunition, suppressors, and their components.</p>
+    </div>
+
+    <p class="source-line fade-up">Sources: <a href="https://saami.org/"target="_blank">SAAMI Standard (Mar 2026)</a> · <a href="https://www.nato.int/en/what-we-do/introduction-to-nato/collective-defence-and-article-5"target="_blank">NATO (Nov 12, 2025)</a> · <a href="https://www.war.gov/Multimedia/Experience/Art-of-the-Shot/"target="_blank">Art of the shot (Feb 25, 2026)</a><br>Photo: Gun Range (public domain)</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 3 — Places and Coordinates
+     ============================================================ -->
+<section class="scene" id="how-it-works">
+  <img class="scene-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/A-10C_Warthog_Cockpit.jpg/960px-A-10C_Warthog_Cockpit.jpg" alt="Data center server aisle with blue lighting">
+  <div class="scene-overlay" style="background: linear-gradient(to right, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.75) 50%, rgba(10,10,10,0.92) 100%);"></div>
+  <div class="scene-content">
+    <div class="fade-up">
+      <div class="section-label">Places and Coordinates</div>
+      <h2 class="section-title">20<br>24</h2>
+      <p class="annotation">Technician by day, explorer by weekend. Passionate about global travel, cultural immersion, and dedicating time to perfect what I learn.</p>
+    </div>
+
+    <div class="chart-panel fade-up">
+      <div class="chart-title">Where coordinates become community</div>
+      <div class="chart-subtitle">Places and activities of interest to me to enjoy my free time, and to practice sports of my choice.</div>
+      
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th style="width: 25%"></th>
+            <th style="width: 37.5%">Coordinates</th>
+            <th style="width: 37.5%">Places / Hobbies</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color: rgba(255,255,255,0.5); font-weight: 600;">USA</td>
+            <td>40.706001, -73.997002</td>
+            <td><span class="badge badge-win"><a style="color:#BCE2E7;" href="pic/br.png"target="_blank">The Brooklyn Bridge</a></span></td>
+          </tr>
+          <tr>
+            <td style="color: rgba(255,255,255,0.5); font-weight: 600;">USA</td>
+            <td>40.7541° N, 74.0008° W</td>
+            <td><span class="badge badge-win"><a style="color:#BCE2E7;" href="pic/Hudsond Yards.png"target="_blank">Hudsond Yards</a></span></td>
+          </tr>
+          <tr>
+            <td style="color: rgba(255,255,255,0.5); font-weight: 600;">Puerto Rico</td>
+            <td>18°24'25.0"N 66°03'36.6"W</td>
+            <td><span class="badge badge-win"><a style="color:#BCE2E7;" href="pic/Type-R.jpg"target="_blank">Mechanical</a></span></td>
+          </tr>
+          <tr>
+            <td style="color: rgba(255,255,255,0.5); font-weight: 600;">Puerto Rico</td>
+            <td>18°24'25.0"N 66°03'36.6"W</td>
+            <td><span class="badge badge-win"><a style="color:#BCE2E7;" href="pic/gym.jpg"target="_blank">Gym</a></span></td>
+          </tr>
+          <tr>
+            <td style="color: rgba(255,255,255,0.5); font-weight: 600;">Puerto Rico</td>
+            <td>18°24'25.0"N 66°03'36.6"W</td>
+            <td><span class="badge badge-win"><a style="color:#BCE2E7;" href="pic/ar.mp4"target="_blank">Ruger AR-15</a></span></td>
+          </tr>
+          <tr>
+            <td style="color: rgba(255,255,255,0.5); font-weight: 600;">Association</td>
+            <td>38.86306°N 77.33556°W</td>
+            <td><span class="badge badge-win"><a style="color:#BCE2E7;" href="pic/NRA.jpg"target="_blank">National Rifle Association</a></span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="source-line">Photo: <a href="https://en.wikipedia.org/wiki/Fairchild_Republic_A-10_Thunderbolt_II"target="_blank">A-10 Thunderbolt II controls (Jul 2026)</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 4 — Completed Degrees
+     ============================================================ -->
+<section class="scene" id="earth2">
+  <img class="scene-bg" src="https://www.imfdb.org/images/8/83/M61_Vulcan_machine_gun.jpg" alt="M61 Vulcan">
+  <div class="scene-overlay" style="background: linear-gradient(to bottom, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.75) 50%, rgba(10,10,10,0.88) 100%);"></div>
+  <div class="scene-content">
+    <div class="fade-up">
+      <div class="section-label">Completed Degrees</div>
+      <h2 class="section-title">“Education is the gala dress to attend<br>the party of life.”</h2>
+      <p class="annotation">"From Molecules to Machines: Bridging Tech, Cybersecurity, and Diesel Power." — The Ultimate Cross-Functional Technician: Pharmaceutical Precision Meets Industrial Tech.</p>
+    </div>
+
+    <div class="pipeline fade-up">
+      <div class="pipeline-step" style="border-left: 3px solid var(--teal);">
+        <span class="pipeline-icon">🚛</span>
+        <div class="pipeline-name">Associate Degree</div>
+        <div class="pipeline-model">Diesel Mechanic</div>
+        <div class="pipeline-desc">1989 - 1991</div>
+      </div>
+      <div class="pipeline-step">
+        <span class="pipeline-icon">🔌</span>
+        <div class="pipeline-name">Associate Degree</div>
+        <div class="pipeline-model">Digital Electronics</div>
+        <div class="pipeline-desc">2002 - 2004</div>
+      </div>
+      <div class="pipeline-step">
+        <span class="pipeline-icon">📡</span>
+        <div class="pipeline-name">Bachelor's Degree</div>
+        <div class="pipeline-model">Information Technology</div>
+        <div class="pipeline-desc">2016 -2020</div>
+      </div>
+      <div class="pipeline-step" style="border-right: 3px solid var(--terra);">
+        <span class="pipeline-icon">💻</span>
+        <div class="pipeline-name">Master's Degree</div>
+        <div class="pipeline-model">Information Systems</div>
+        <div class="pipeline-desc">2021 - 2023</div>
+      </div>
+    </div>
+
+    <div class="kpi-row fade-up">
+      <div class="kpi-card">
+        <div class="kpi-value teal">3.25</div>
+        <div class="kpi-label">GPA obtained at Columbia University </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value gold">3.50</div>
+        <div class="kpi-label">GPA obtained at National University </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value" style="color: var(--light-cyan);">3.65</div>
+        <div class="kpi-label">GPA obtained at Northbridge University </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 5 — Reliability and Stress
+     ============================================================ -->
+<section class="scene" id="scorecard">
+  <img class="scene-bg" src="pic/12.png" alt="NASA GPM satellite view of severe thunderstorms">
+  <div class="scene-overlay" style="background: linear-gradient(to bottom, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.7) 40%, rgba(10,10,10,0.9) 100%);"></div>
+  <div class="scene-content">
+    <div class="fade-up">
+      <div class="section-label">Reliability and Stress</div>
+      <h2 class="section-title">Model of firearms and metrics —<br>for daily use</h2>
+      <p class="annotation"><!-- Weather -->
+      <div class="clipping__headline"><a class="weatherwidget-io" href="https://forecast7.com/en/18d47n66d11/san-juan/?unit=us" data-label_1="SAN JUAN" data-label_2="WEATHER" data-icons="Climacons Animated" data-days="3" data-theme="marine" >SAN JUAN WEATHER</a>
+<script>
+!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+</script>
+<!-- Weather --></p>
+    </div>
+
+    <div class="chart-panel fade-up" id="accuracy-chart">
+      <div class="chart-title">Testing the accuracy, reliability, use and handling of different firearms</div>
+      <div class="chart-subtitle">Percentage based on my personal usage; each person could record different values.</div>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Glock</div>
+          <div class="bar-track"><div class="bar-fill" style="--target-width: 99.2%; background: var(--teal);"></div></div>
+          <div class="bar-val">99.2%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Smith and Wesson</div>
+          <div class="bar-track"><div class="bar-fill" style="--target-width: 90%; background: var(--teal);"></div></div>
+          <div class="bar-val">90.0%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Ruger</div>
+          <div class="bar-track"><div class="bar-fill" style="--target-width: 97%; background: var(--gold);"></div></div>
+          <div class="bar-val">97.0%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">SIG Sauer</div>
+          <div class="bar-track"><div class="bar-fill" style="--target-width: 35%; background: rgba(255,255,255,0.15);"></div></div>
+          <div class="bar-val" style="color: rgba(255,255,255,0.4);">35%</div>
+        </div>
+      </div>
+      <p class="source-line">Sources: <a href="https://www.nxtbook.com/nxtbooks/nra/si_202504/"target="_blank">Shooting Illustrated — (Apr 2025)</a></p>
+    </div>
+
+    <div class="chart-panel fade-up" id="leadtime-chart">
+      <div class="chart-title">Applying stress to different models of firearms at the shooting range</div>
+      <div class="chart-subtitle">Conclusion based on personal experience: each person may have different experiences in the use of a firearm.</div>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Stress</th>
+            <th>Reliability</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight: 600;">Glock</td>
+            <td>More than 800 shots <span class="badge badge-win">Excelent</span></td>
+            <td>Complete confidence in any environment</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600;">Smith and Wesson</td>
+            <td>More than 500 shots <span class="badge badge-tie">Perfect</span></td>
+            <td>Precision and good handling</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600;">Ruger</td>
+            <td>More than 700 shots <span class="badge badge-tie">Perfect</span></td>
+            <td>Smooth to use and reliable</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600;">SIG Sauer</td>
+            <td>Just 230 shots <span style="color:red" class="badge badge-tie">Questionable operation</span></td>
+            <td>Many malfunctions under stressful use</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="source-line">Sources: <a href="https://www.sciencemadesimple.com/conversions.html"target="_blank">Metric Conversion Calculator & Unit Conversion Chart</a> · <a href="https://forecast7.com/en/18d47n66d11/san-juan/?unit=us"target="_blank">Forecast 7 (San Juan PR.)</a></p>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ============================================================
+     SCREEN 7 — Shooting Range
+     ============================================================ -->
+<section class="scene" id="speed">
+  <img class="scene-bg" src="pic/M1.jpg" alt="Wave">
+  <div class="scene-overlay" style="background: linear-gradient(135deg, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.72) 50%, rgba(10,10,10,0.9) 100%);"></div>
+  <div class="scene-content">
+    <div class="fade-up">
+      <div class="section-label">Shooting Range</div>
+      <h2 class="section-title">Safety first, accuracy second —<br>Lock in safety before you lock and load</h2>
+      <p class="annotation">2024</p>
+    </div>
+
+    <div class="chart-panel fade-up" id="speed-chart">
+      <div class="chart-title">Some videos from the shooting range</div><br>
+      <div class="chart-subtitle"><style>
+* {
+  box-sizing: border-box;
+}
+
+div.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+div.gallery-item {
+  margin: 5px;
+  border: 1px solid #ccc;
+  width: calc(25% - 20px);
+}
+
+div.gallery-item:hover {
+  border: 1px solid #777;
+}
+
+div.gallery-item img {
+  width: 100%;
+  height: auto;
+}
+
+div.gallery-item div.desc {
+  padding: 15px;
+  text-align: center;
+}
+
+@media only screen and (max-width: 768px) {
+  div.gallery-item {
+    width: calc(50% - 20px);
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  div.gallery-item {
+    width: calc(100% - 20px);
+  }
+}
+</style>
+</head>
+<body>
+<div class="gallery">
+
+<div class="gallery-item">
+  <a target="_blank" href="pic/Glock.mp4">
+    <img src="https://i.gifer.com/YVPA.gif" alt=".45 ACP" width="600" height="400">
+  </a>
+  <div class="desc">.45 ACP</div>
+</div>
+
+<div class="gallery-item">
+  <a target="_blank" href="pic/ar15.mp4">
+    <img src="https://i.gifer.com/YVPA.gif" alt="5.56" width="600" height="400">
+  </a>
+  <div class="desc">5.56 NATO</div>
+</div>
+
+<div class="gallery-item">
+  <a target="_blank" href="pic/sw.mp4">
+    <img src="https://i.gifer.com/YVPA.gif" alt=".44 Magnum" width="600" height="400">
+  </a>
+  <div class="desc">.44 Magnum</div>
+</div>
+
+<div class="gallery-item">
+  <a target="_blank" href="pic/zz.mp4">
+    <img src="https://i.gifer.com/YVPA.gif" alt="Mountains" width="600" height="400">
+  </a>
+  <div class="desc">Shooting Range</div>
+</div>
+</div>
+      </div>
+      <p class="source-line">Sources: <a href="https://www.armeriaponcedeleonpr.com/"target="_blank">Armeria Ponce de Le&oacute;n - </a>Practical shooting since 1990.</p>
+    </div>
+
+    <div class="gauge-row fade-up">
+      <div class="gauge-item">
+        <svg viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10"/>
+          <circle cx="60" cy="60" r="48" fill="none" stroke="var(--teal)" stroke-width="10"
+            stroke-dasharray="301.6" stroke-dashoffset="301.6" stroke-linecap="round"
+            transform="rotate(-90 60 60)" class="gauge-arc" data-offset="3.016"/>
+          <text x="60" y="58" text-anchor="middle" class="gauge-center-text">100%</text>
+          <text x="60" y="74" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="9" font-family="var(--font-body)">Safety</text>
+        </svg>
+        <div class="gauge-label-text">There is no margin<br>for error here</div>
+      </div>
+      <div class="gauge-item">
+        <svg viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10"/>
+          <circle cx="60" cy="60" r="48" fill="none" stroke="var(--gold)" stroke-width="10"
+            stroke-dasharray="301.6" stroke-dashoffset="301.6" stroke-linecap="round"
+            transform="rotate(-90 60 60)" class="gauge-arc" data-offset="3.016"/>
+          <text x="60" y="58" text-anchor="middle" class="gauge-center-text">100%</text>
+          <text x="60" y="74" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="9" font-family="var(--font-body)">Accurate</text>
+        </svg>
+        <div class="gauge-label-text">Error-free <br>execution</div>
+      </div>
+      <div class="gauge-item">
+        <svg viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10"/>
+          <circle cx="60" cy="60" r="48" fill="none" stroke="var(--terra)" stroke-width="10"
+            stroke-dasharray="301.6" stroke-dashoffset="301.6" stroke-linecap="round"
+            transform="rotate(-90 60 60)" class="gauge-arc" data-offset="3.016"/>
+          <text x="60" y="58" text-anchor="middle" class="gauge-center-text">100%</text>
+          <text x="60" y="74" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="9" font-family="var(--font-body)">Quality</text>
+        </svg>
+        <div class="gauge-label-text">Where quality is<br>never compromised</div>
+      </div>
+    </div>
+
+    <p class="source-line fade-up">Sources: <a href="https://militarymachine.com/m1-abrams-tank-images"target="_blank">Military Machine ( Jul 2019)</a> · <a href="https://www.nxtbook.com/nxtbooks/nra/ar_202504/index.php"target="_blank">American Rifleman (Apr 2025)</a><br>Photo:  M1 Abrams tank gun (free license)</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 8 — Ammunition and jobs
+     ============================================================ -->
+<section class="scene" id="landscape">
+  <img class="scene-bg" src="pic/gl.png" alt="Isolated supercell thunderstorm">
+  <div class="scene-overlay" style="background: linear-gradient(to bottom, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.75) 50%, rgba(10,10,10,0.92) 100%);"></div>
+  <div class="scene-content">
+    <div class="fade-up">
+      <div class="section-label">Ammunition and jobs Experiences</div>
+      <h2 class="section-title">Responsibility Over Firepower</h2>
+      <p class="annotation">Four calibers of ammunition that offer stopping power and satisfaction when used responsibly and consciously.</p>
+    </div>
+
+    <div class="chart-panel fade-up">
+      <div class="chart-title">Power Demands Oversight</div>
+      <div class="chart-subtitle">Velocities of different ammunition taken in a controlled environment.</div>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>Caliber</th>
+            <th>Recoil</th>
+            <th>Speed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight: 600;">Glock</td>
+            <td>30S</td>
+            <td>.45 ACP</td>
+            <td>Manageable</td>
+            <td>800 and 1,200 feet per second (fps)</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600;">Ruger</td>
+            <td>AR-15</td>
+            <td>5.56 NATO</td>
+            <td>Manageable</td>
+            <td>2,700 to 3,300 feet per second (fps)</td>
+          </tr>          
+          <tr>
+            <td style="font-weight: 600;">Smith & Wesson</td>
+            <td>629 4" BARREL</td>
+            <td>.44 Magnum</td>
+            <td style="color:red">Very strong</td>
+            <td>1,150 fps to over 2,100 (fps)</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600; color: var(--teal);">Barrett Firearms</td>
+            <td>99</td>
+            <td>.50 BMG</td>
+            <td style="color:red">Powerfully Strong</td>
+            <td>2,730 and 2,950 feet per second (fps)</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="source-line">Sources: <a href="https://commons.wikimedia.org/w/index.php?search=glock&title=Special%3AMediaSearch&type=image"target="_blank">Wikimedia (Jan 2026)</a> · <a href="https://www.glockstore.com/"target="_blank">Glock Store (Jul 2026)</a> · Firearm / Ammunition (Dec 1996) · <a href="https://ammo.com/"target="_blank">Ammo.com</a> · <a href="https://fusionfirearms.com/sights/shotgun-rifle-sights"target="_blank">Fusion Firearms</a></p>
+    </div>
+<h2>Some past and present employment experiences</h2>
+    <div class="timeline fade-up">
+      <div class="timeline-item">
+        <div class="timeline-date"><summary>Perez & CIA (Abarca) Pier 15 — San Juan PR. (1990 - 1992)</summary></div>
+        <div class="timeline-text"><details>  
+  <p><a href="https://lh3.googleusercontent.com/gps-cs-s/APNQkAGHiAK9EKXk1yGVudzmGP62ecyZMzOW6lmnC4r1BIUvlNCeAyp3eCJGs6MT4nqMe_sp6Ug73iN4MUkXzFKLcEHNZ4j_00s-rJeVDP02qTLNgjV_rYj5cypRc9TGcULO-tDpcKwh=s1360-w1360-h1020"target="_blank">
+  <button class="intro-cta-primary">Diesel Mechanic</button>
+  </a><br> Responsible for repairing and adjusting mechanical parts in diesel engines of cargo ships, operating heavy transport equipment using safety techniques at all times. Rectify ship propellers and install them on the propulsion shaft.</p>
+</details></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date"><summary>Intel (CBBP) — Las Piedras PR. (1995 - 1999)</summary></div>
+        <div class="timeline-text"><details> 
+  <p><a href="pic/intel.JPG"target="_blank">
+  <button class="intro-cta-primary">Test Technician</button>
+  </a><br> Assemble and troubleshoot i486 and Pentium 3 and 4 Microprocessor, memory banks, configuration jumpers, CMOS batteries,
+                EPROM, PAL, PROM and input and output peripherals to perform quality testing on finished server PCBs.</p>
+</details></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date"><summary>DAIG / St. Jude Medical — MN USA. & Caguas, PR. (2000 - 2002)</summary></div>
+        <div class="timeline-text"><details>  
+  <p><a href="pic/daig.jpg"target="_blank">
+  <button class="intro-cta-primary">Line Lead / QC</button>
+  </a><br> Resposible to develop a strategy that the team members can use to better reach a project’s goal,
+             assign tasks to team members of the Suture Preparation, Knot Tie, Crush and Crimp, Winding, Pull Test,
+              Peel Test, Vaccum Sealer and Drying Ovens cells, determine the completion timeline, KPI and monitor progress
+               to keep the project on track and on schedule, create and distribute reports to update the company on
+                the team’s progress.</p>
+</details></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date"><summary>McNeil Pharmaceutical — Las Piedras, PR. (2005 - 2010)</summary></div>
+        <div class="timeline-text"><details> 
+  <p><a href="https://lh3.googleusercontent.com/gps-cs-s/APNQkAGtwtneNzPnWv_zuaLLzycMP6LND-HGIPJOEU5DlHrGD_PPkT7ZFxirDdg3FH2RV-PXPBjKX4rsvnL8KdsZjLquVX5pUALVbaLQi3CQMokwNYr6fThBdCPKNE_ufyOhRo0ysIAJ=s1360-w1360-h1020"target="_blank">
+  <button class="intro-cta-primary">Manufacturing Operator</button>
+  </a><br> Weigh and document APIs and excipients to be granulated, verify cleanliness, relative humidity
+             of the process room and equipment calibrations to begin the loading, mixing and granulation process.
+              Operate, troubleshoot, disassemble, and reassemble granulation equipment such as Low and High Shear Mixers,
+               Solution Reactors, Milling Machines, and Fluid Bed Dryers in accordance with applicable cGMPs and SOPs.</p>
+</details></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date"><summary>Tres Monjitas, Hato Rey Plastic — San Juan, PR. ( 2025 - 2026 )</summary></div>
+        <div class="timeline-text"><details> 
+  <p><a href="pic/vtm.png"target="_blank">
+  <button class="intro-cta-primary">Injection Molding Technician</button>
+  </a><br> Set-Up and operates injection-molding
+             machines to cast lids for plastic containers from thermoplastic
+              materials, install dies on machine, according to work order
+               specifications, using clamps, bolts, and hand tools. Sets
+                machine control, regulating molding temperature, volume
+                 of plastic, molding pressure and time, according to knowledge
+                  of plastics and molding procedures.</p>
+</details></div>
+      </div>
+      <div class="timeline-item highlight">
+        <div class="timeline-date"> <summary>Stryker — Humacao, PR. (2026 TO Present)</summary></div>
+        <div class="timeline-text"><details>
+  <p><a href="pic/stryker.png"target="_blank">
+  <button class="intro-cta-primary">Plastic Processing Operator III</button>
+  </a><br> Responsible for operating plastics processing equipment,
+             including automatic and semi-automatic machines, to produce
+              components that meet quality and production targets. Set up, start,
+               and monitor machines following process sheets, manufacturing
+                procedures, and supervisor instructions. Perform equipment and
+                 process setups, including tooling and die changes, to achieve
+                  required part dimensions and quality. Monitor machine parameters
+                   and make routine adjustments (temperature, pressure, speed) to
+                    ensure consistent output. Inspect parts using measuring tools
+                     and visual checks to verify compliance with dimensional and
+                      quality standards. Accurately record production data, scrap,
+                       process adjustments, and basic maintenance activities.</p>
+</details></div>
+      </div>
+    </div>
+
+    <p class="source-line fade-up">Photo: Glock (public domain) — Last page update <span id="currentYear"></span>.
+<script>
+  document.getElementById("currentYear").textContent = new Date().getFullYear();
+</script></p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCREEN 9 — The Verdict
+     ============================================================ -->
+<section class="scene" id="verdict" style="min-height: 100vh;">
+  <img class="scene-bg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/RNLAF_AH-64_Apache_at_the_Oirschotse_Heide_Low_Flying_Area_%2836570605232%29.jpg/1280px-RNLAF_AH-64_Apache_at_the_Oirschotse_Heide_Low_Flying_Area_%2836570605232%29.jpg" alt="Tornado damage in Texas">
+  <div class="scene-overlay" style="background: linear-gradient(to bottom, rgba(10,10,10,0.7) 0%, rgba(10,10,10,0.85) 50%, rgba(10,10,10,0.95) 100%);"></div>
+  <div class="scene-content" style="display: flex; flex-direction: column; justify-content: center; min-height: 100vh;">
+    <div class="fade-up">
+      <div class="section-label">Contact</div>
+      <h2 class="section-title" style="max-width: 720px;"></h2>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0;" class="fade-up">
+      <div class="chart-panel" style="border-left: 3px solid var(--teal);">
+        <div style="font-size: 0.72rem; font-weight: 600; color: var(--teal); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;">Personal Information</div>
+        <ul style="list-style: none; padding: 0;">
+          <li style="font-size: 0.88rem; color: rgba(255,255,255,0.8); padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06);"><strong style="color:MediumSeaGreen;">Address: </strong>196 Cll Segarra suite 2c, San Juan, 00920</li>
+          <li style="font-size: 0.88rem; color: rgba(255,255,255,0.8); padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06);"><strong style="color:MediumSeaGreen;">e-mail: </strong><a style="color:#20808D;"href="mailto:perezmv2021@outlook.com"> perezmv2021@outlook.com</a></li>
+          <li style="font-size: 0.88rem; color: rgba(255,255,255,0.8); padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06);"><strong style="color:MediumSeaGreen;">Mobil: </strong>(939) 220-1491</li>
+          <li style="font-size: 0.88rem; color: rgba(255,255,255,0.8); padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06);"><strong style="color:MediumSeaGreen;">SMS: </strong><a style="color:#20808D;"href="sms:+19392201491">Miguel E. P&eacute;rez Vel&aacute;zquez</a></li>
+          <li style="font-size: 0.88rem; color: rgba(255,255,255,0.8); padding: 6px 0;">All the information and content shown on this page is verifiable in the W<sup>3</sup>.</li>
+          <li style="font-size: 0.88rem; color: rgba(255,255,255,0.8); padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06);"></li>
+        </ul>
+      </div>
+      <div class="chart-panel" style="border-left: 3px solid var(--terra);">
+        <div style="font-size: 0.72rem; font-weight: 600; color: var(--terra); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;">AAA Armory - Location: San Juan PR.</div>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d112.48670812801416!2d-66.09459304493325!3d18.423018549680883!2m3!1f0!2f39.340264974118774!3f0!3m2!1i1024!2i768!4f35!3m3!1m2!1s0x8c03691ffacc994b%3A0x37be541b3afb5cfe!2sAAA%20Armory%20San%20Juan!5e1!3m2!1ses-419!2spr!4v1749945965975!5m2!1ses-419!2spr" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+
+    <div class="callout fade-up">
+      <p><strong>Biography.</strong> Born in Hato Rey Puerto Rico, on June 13, 1969. Information technology professional specializing in information security and assurance. I specialize as a technician in an FDA-regulated medical device industry.</p>
+    </div>
+
+    <p style="color:#20808D;"class="source-line fade-up" style="margin-top: 2rem;">
+      Copyright &copy; <span id="year"></span>. <strong style="color: rgba(255,255,255,0.5);">MP - Locked and loaded</strong> <span class="footer-separator">•</span> All Rights Reserved <span class="footer-separator">•</span> Page developed by: <a href="https://mperez2024.github.io/mptech/"target="_blank">MP-Tech</a> <span class="footer-separator">•</span> United States. <img src="pic/flag.gif"width="20" height="12" alt="" />
+		        <script>
+		        document.getElementById("year").textContent = new Date().getFullYear();
+		        </script>
+    </p>
+
+    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.08);" class="fade-up">
+      <p style="font-size: 0.72rem; color: rgba(255,255,255,0.35); line-height: 1.6; max-width: 700px;">
+        <strong style="color: rgba(255,255,255,0.5);">NRA Gun Safety Rules:</strong> Common sense dictates the safest direction, depending on different circumstances. <strong style="color:red">ALWAYS</strong> Keep The Gun Pointed In A Safe Direction
+This is the primary rule of gun safety.  <strong style="color:red">ALWAYS</strong> Keep Your Finger Off The Trigger Until Ready To Shoot
+When holding a gun, rest your finger alongside the frame and outside the trigger guard. Until you are actually ready to fire, do not touch the trigger. <strong style="color:red">ALWAYS</strong> Keep The Gun Unloaded Until Ready To Use
+If you do not know how to open the action or inspect the chamber(s), leave the gun alone and get help from someone who does.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+// ============ INTERSECTION OBSERVER FOR ANIMATIONS ============
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      
+      // Animate bar fills
+      if (entry.target.querySelector('.bar-fill')) {
+        entry.target.querySelectorAll('.bar-fill').forEach((bar, i) => {
+          setTimeout(() => bar.classList.add('animated'), i * 200);
+        });
+      }
+      
+      // Animate timeline items
+      if (entry.target.querySelector('.timeline-item')) {
+        entry.target.querySelectorAll('.timeline-item').forEach((item, i) => {
+          setTimeout(() => item.classList.add('visible'), i * 250);
+        });
+      }
+      
+      // Animate gauge arcs
+      if (entry.target.querySelector('.gauge-arc')) {
+        entry.target.querySelectorAll('.gauge-arc').forEach((arc, i) => {
+          const offset = parseFloat(arc.dataset.offset);
+          setTimeout(() => {
+            arc.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            arc.style.strokeDashoffset = offset;
+          }, i * 300);
+        });
+      }
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+<script data-pplx-inline-edit>
+(function(){
+  if(window===window.top)return;
+  function inlineAll(orig,clone){
+    if(orig.nodeType!==1)return;
+    try{
+      var cs=getComputedStyle(orig);
+      var t='';
+      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
+      clone.style.cssText=t;
+    }catch(e){}
+    var oc=orig.children,cc=clone.children;
+    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
+  }
+  function stripExternal(clone){
+    var imgs=clone.querySelectorAll('img');
+    for(var i=0;i<imgs.length;i++){
+      var s=imgs[i].getAttribute('src');
+      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
+    }
+    var all=clone.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var st=all[i].style.cssText;
+      if(st&&st.indexOf('url(')>=0){
+        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
+      }
+    }
+  }
+  window.addEventListener('message',function(e){
+    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
+    var scrollX=window.scrollX||window.pageXOffset||0;
+    var scrollY=window.scrollY||window.pageYOffset||0;
+    var w=window.innerWidth,h=window.innerHeight;
+    try{
+      var clone=document.documentElement.cloneNode(true);
+      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
+      for(var i=0;i<rm.length;i++){rm[i].remove();}
+      inlineAll(document.documentElement,clone);
+      stripExternal(clone);
+      var html=new XMLSerializer().serializeToString(clone);
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
+        +'<foreignObject width="100%" height="100%">'
+        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
+        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
+        +html+'</div></div></foreignObject></svg>';
+      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0);
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.onerror=function(){
+        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+      };
+      img.src=svgUrl;
+    }catch(err){
+      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
+    }
+  });
+})();
+</script></body>
+</html>
